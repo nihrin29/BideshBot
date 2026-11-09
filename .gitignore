@@ -1,0 +1,41 @@
+# ---------------------------------------------
+# Files and folders that Git should NOT upload
+# ---------------------------------------------
+
+# Personal study notes (kept only on my computer)
+notes/
+
+# Secrets: API keys and passwords (never upload these)
+.env
+
+# Local database file used during development (created automatically)
+instance/
+*.db
+
+# Python virtual environment (each computer creates its own)
+.venv/
+venv/
+
+# Python cache files (created automatically)
+__pycache__/
+*.pyc
+
+# Interview recordings and transcripts (participants' privacy)
+*.m4a
+*.mp3
+MP3_for_Drive/
+transcripts/
+
+# Project documents (submitted separately, not part of the code)
+*.pdf
+*.docx
+
+# Old scripts used to transcribe the interviews (not part of the website)
+transcribe.py
+transcribe_gemini.py
+
+# Editor and system files
+.vscode/
+.idea/
+Thumbs.db
+desktop.ini

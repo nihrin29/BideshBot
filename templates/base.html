@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Makes the page fit phone screens (NFR-15) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}BideshBot{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Navigation bar shown on every page (NFR-14) -->
+    <header class="navbar">
+        <a href="{{ url_for('home') }}" class="logo">BideshBot</a>
+        <nav>
+            <a href="{{ url_for('home') }}">Home</a>
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="footer">
+        <p>BideshBot provides guidance only and does not guarantee admission, funding or a visa.</p>
+    </footer>
+</body>
+</html>
