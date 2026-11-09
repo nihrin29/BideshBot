@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Register – BideshBot{% endblock %}
+
+{% block content %}
+<div class="form-box">
+    <h1>Create an Account</h1>
+
+    <form method="post" novalidate>
+        {{ form.hidden_tag() }}  <!-- the hidden CSRF token (NFR-07) -->
+
+        <div class="field">
+            {{ form.email.label }}
+            {{ form.email(autocomplete="email") }}
+            {% for error in form.email.errors %}<p class="error">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div class="field">
+            {{ form.password.label }}
+            {{ form.password(autocomplete="new-password") }}
+            <p class="help">At least 8 characters.</p>
+            {% for error in form.password.errors %}<p class="error">{{ error }}</p>{% endfor %}
+        </div>
+
+        <div class="field">
+            {{ form.confirm_password.label }}
+            {{ form.confirm_password(autocomplete="new-password") }}
+            {% for error in form.confirm_password.errors %}<p class="error">{{ error }}</p>{% endfor %}
+        </div>
+
+        <!-- Privacy notice (NFR-30) -->
+        <div class="privacy-notice">
+            <h2>Privacy notice</h2>
+            <p>
+                BideshBot stores your email, a scrambled (hashed) version of your password, and the
+                academic information you enter, such as results, test scores and preferred countries.
+                This is used only to match you with scholarships. We do not collect national ID or
+                passport numbers, addresses, phone numbers or financial details. Your data is never
+                sold or shared with agencies, and you can delete your account and all your data at any time.
+            </p>
+        </div>
+
+        <div class="field checkbox">
+            {{ form.accept_privacy() }}
+            {{ form.accept_privacy.label }}
+            {% for error in form.accept_privacy.errors %}<p class="error">{{ error }}</p>{% endfor %}
+        </div>
+
+        {{ form.submit(class="button") }}
+    </form>
+
+    <p class="switch-link">Already have an account? <a href="{{ url_for('auth.login') }}">Log in</a></p>
+</div>
+{% endblock %}

@@ -8,5 +8,13 @@
         Bachelor's, Master's or PhD study in the USA, UK, Germany and Canada.
         Every listing links to its official source.
     </p>
+
+    {% if not current_user.is_authenticated %}
+        <!-- Register and Login buttons from wireframe screen 1 -->
+        <div class="button-row">
+            <a href="{{ url_for('auth.register') }}" class="button">Register</a>
+            <a href="{{ url_for('auth.login') }}" class="button button-outline">Log in</a>
+        </div>
+    {% endif %}
 </section>
 {% endblock %}

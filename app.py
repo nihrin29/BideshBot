@@ -24,6 +24,14 @@ def create_app():
     # Import the models so SQLAlchemy knows about every table.
     import models  # noqa: F401
 
+    # FR-04: guests who open a page that needs login are sent to the login page.
+    login_manager.login_view = "auth.login"
+    login_manager.login_message = "Please log in or register to use this feature."
+
+    # Connect each group of pages (blueprint).
+    from auth import auth_bp
+    app.register_blueprint(auth_bp)
+
     # Create any database tables that don't exist yet.
     with app.app_context():
         db.create_all()
