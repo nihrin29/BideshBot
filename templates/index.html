@@ -1,20 +1,63 @@
 {% extends "base.html" %}
 
 {% block content %}
+<!-- Home page banner (wireframe screens 1 and 4) -->
 <section class="hero">
-    <h1>Find scholarships to study abroad</h1>
-    <p>
-        Free, neutral scholarship information for Bangladeshi students planning
-        Bachelor's, Master's or PhD study in the USA, UK, Germany and Canada.
-        Every listing links to its official source.
-    </p>
-
-    {% if not current_user.is_authenticated %}
-        <!-- Register and Login buttons from wireframe screen 1 -->
+    <div class="hero-text">
+        <p class="label"><span class="dot"></span> Big dreams, new destinations</p>
+        <h1>Your next chapter starts <em>abroad.</em></h1>
+        <p class="hero-lead">
+            Welcome to BideshBot, your scholarship discovery and study-abroad companion.
+        </p>
+        <p class="hero-sub">
+            Find scholarships for Bachelor's, Master's or PhD study in the United States,
+            United Kingdom, Germany and Canada, and see clearly whether you meet each one's
+            requirements.
+        </p>
         <div class="button-row">
-            <a href="{{ url_for('auth.register') }}" class="button">Register</a>
-            <a href="{{ url_for('auth.login') }}" class="button button-outline">Log in</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('auth.account') }}" class="button">My account <span aria-hidden="true">→</span></a>
+            {% else %}
+                <a href="{{ url_for('auth.register') }}" class="button">Register <span aria-hidden="true">→</span></a>
+                <a href="{{ url_for('auth.login') }}" class="button button-outline">Log in</a>
+            {% endif %}
         </div>
-    {% endif %}
+    </div>
+
+    <!-- Destinations card (wireframe screen 4: Japan replaced by USA in the SRS) -->
+    <aside class="study-map">
+        <p class="label">Your study map</p>
+        <h2>One ambition.<br>Four destinations.</h2>
+        <p class="study-map-sub">Where will your curiosity take you?</p>
+        <ul class="country-list">
+            <li><span class="country-code">US</span> United States <span class="arrow" aria-hidden="true">↗</span></li>
+            <li><span class="country-code">UK</span> United Kingdom <span class="arrow" aria-hidden="true">↗</span></li>
+            <li><span class="country-code">DE</span> Germany <span class="arrow" aria-hidden="true">↗</span></li>
+            <li><span class="country-code">CA</span> Canada <span class="arrow" aria-hidden="true">↗</span></li>
+        </ul>
+        <p class="study-map-levels">Bachelor's &nbsp;/&nbsp; Master's &nbsp;/&nbsp; PhD</p>
+    </aside>
+</section>
+
+<!-- How it works: 3 simple steps -->
+<section class="steps">
+    <p class="label">How it works</p>
+    <div class="steps-grid">
+        <div class="step">
+            <span class="step-number">01</span>
+            <h3>Create your profile</h3>
+            <p>Enter your degree level, results and test scores in a short guided form.</p>
+        </div>
+        <div class="step">
+            <span class="step-number">02</span>
+            <h3>See your matches</h3>
+            <p>Find out which scholarships you meet, which are close, and exactly what is missing.</p>
+        </div>
+        <div class="step">
+            <span class="step-number">03</span>
+            <h3>Apply on the official site</h3>
+            <p>Every listing links straight to the official scholarship and application page.</p>
+        </div>
+    </div>
 </section>
 {% endblock %}

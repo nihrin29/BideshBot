@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="BideshBot logo">
+  <!-- Rounded square background -->
+  <rect x="2" y="2" width="60" height="60" rx="14" fill="#1f5c45"/>
+  <!-- Globe: circle with two curved lines (the world = studying abroad) -->
+  <circle cx="32" cy="38" r="15" fill="none" stroke="#ffffff" stroke-width="3"/>
+  <path d="M17 38h30" stroke="#ffffff" stroke-width="2.5"/>
+  <path d="M32 23c-6 4-6 26 0 30M32 23c6 4 6 26 0 30" fill="none" stroke="#ffffff" stroke-width="2.5"/>
+  <!-- Graduation cap on top of the globe (education) -->
+  <path d="M32 8 14 16l18 8 18-8z" fill="#fbbf24"/>
+  <path d="M48 16.8v7" stroke="#fbbf24" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
