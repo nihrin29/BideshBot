@@ -5,13 +5,13 @@ Pages for user accounts: register, login and logout (FR-02, FR-03).
 from datetime import datetime, timedelta
 
 from flask import Blueprint, flash, redirect, render_template, session, url_for
-from flask_login import current_user, login_user, logout_user
+from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from extensions import db
 from models import User
 
-from .forms import LoginForm, RegisterForm
+from .forms import DeleteAccountForm, LoginForm, RegisterForm
 
 # A blueprint is a group of related pages. All account pages live in this one.
 auth_bp = Blueprint("auth", __name__)
@@ -95,6 +95,31 @@ def login():
         flash("Incorrect email or password.", "error")
 
     return render_template("auth/login.html", form=form)
+
+
+@auth_bp.route("/account")
+@login_required  # FR-04: only logged-in students can open this page
+def account():
+    return render_template("auth/account.html", form=DeleteAccountForm())
+
+
+@auth_bp.route("/account/delete", methods=["POST"])
+@login_required
+def delete_account():
+    form = DeleteAccountForm()
+
+    if form.validate_on_submit() and check_password_hash(current_user.password_hash, form.password.data):
+        user = current_user._get_current_object()
+        logout_user()
+        # FR-07: deleting the user also deletes their profile, saved scholarships,
+        # reports and chats, because of the "cascade" setting in models.py.
+        db.session.delete(user)
+        db.session.commit()
+        flash("Your account and all your data have been permanently deleted.", "success")
+        return redirect(url_for("home"))
+
+    flash("Incorrect password. Your account was not deleted.", "error")
+    return redirect(url_for("auth.account"))
 
 
 @auth_bp.route("/logout")

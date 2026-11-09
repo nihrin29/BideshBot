@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}My Account – BideshBot{% endblock %}
+
+{% block content %}
+<div class="form-box">
+    <h1>My Account</h1>
+    <p><strong>Email:</strong> {{ current_user.email }}</p>
+    <p><strong>Member since:</strong> {{ current_user.created_at.strftime("%d %B %Y") }}</p>
+
+    <!-- FR-07: delete account -->
+    <div class="danger-zone">
+        <h2>Delete account</h2>
+        <p>
+            This permanently deletes your account, profile, saved scholarships,
+            reports and chat history. It cannot be undone.
+        </p>
+        <form method="post" action="{{ url_for('auth.delete_account') }}" novalidate>
+            {{ form.hidden_tag() }}
+            <div class="field">
+                {{ form.password.label }}
+                {{ form.password(autocomplete="current-password") }}
+            </div>
+            {{ form.submit(class="button button-danger") }}
+        </form>
+    </div>
+</div>
+{% endblock %}

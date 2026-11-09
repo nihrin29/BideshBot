@@ -73,6 +73,27 @@ body {
     background: #e8eef6;
 }
 
+.button-danger {
+    background: #b42318;
+    border-color: #b42318;
+}
+
+.button-danger:hover,
+.button-danger:focus {
+    background: #8a1c1c;
+}
+
+.danger-zone {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px solid #d9e2ec;
+}
+
+.danger-zone h2 {
+    font-size: 1.1rem;
+    color: #b42318;
+}
+
 .button-row {
     display: flex;
     gap: 12px;

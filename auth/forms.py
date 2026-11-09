@@ -33,6 +33,14 @@ class RegisterForm(FlaskForm):
     submit = SubmitField("Register")
 
 
+class DeleteAccountForm(FlaskForm):
+    # The student types their password again to confirm (FR-07).
+    password = PasswordField("Enter your password to confirm", validators=[
+        DataRequired(message="Please enter your password."),
+    ])
+    submit = SubmitField("Delete my account")
+
+
 class LoginForm(FlaskForm):
     email = EmailField("Email", validators=[DataRequired(message="Please enter your email.")])
     password = PasswordField("Password", validators=[DataRequired(message="Please enter your password.")])
