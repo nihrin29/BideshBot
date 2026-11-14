@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% from "profile/_macros.html" import field, progress %}
+
+{% set degree_label = {"Bachelor": "Bachelor's", "Master": "Master's", "PhD": "PhD"}[degree] %}
+
+{% block title %}Your profile – BideshBot{% endblock %}
+
+{% block content %}
+<div class="wide-form">
+    <div class="page-head">
+        <h1>Your academic <em>profile</em></h1>
+        <p>Fields marked <span class="req">*</span> are required.</p>
+    </div>
+    {{ progress(2, degree_label) }}
+
+    <form method="post" class="panel" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="two-columns">
+            <!-- Left: academic results for the chosen degree (FR-09 to FR-11) -->
+            <div>
+                {% if degree == "Bachelor" %}
+                    <h2 class="section-title">School results</h2>
+                    {{ field(form.school_qualification) }}
+                    <div class="pair">
+                        {{ field(form.secondary_result, required=True, step="any") }}
+                        {{ field(form.secondary_scale) }}
+                    </div>
+                    <div class="pair">
+                        {{ field(form.higher_secondary_result, required=True, step="any") }}
+                        {{ field(form.higher_secondary_scale) }}
+                    </div>
+                {% else %}
+                    <h2 class="section-title">Bachelor's degree</h2>
+                    {% if degree == "Master" %}
+                        {{ field(form.institution, required=True) }}
+                        {{ field(form.bachelor_field, required=True) }}
+                    {% endif %}
+                    <div class="pair">
+                        {{ field(form.bachelor_cgpa, required=True, step="any") }}
+                        {{ field(form.bachelor_scale) }}
+                    </div>
+                    {% if degree == "Master" %}
+                        <div class="pair">
+                            {{ field(form.graduation_year, required=True) }}
+                            {{ field(form.work_experience_years, step="any") }}
+                        </div>
+                    {% endif %}
+
+                    {% if degree == "PhD" %}
+                        <h2 class="section-title">Master's degree and research</h2>
+                        <div class="pair">
+                            {{ field(form.master_cgpa, required=True, step="any") }}
+                            {{ field(form.master_scale) }}
+                        </div>
+                        {{ field(form.research_area, required=True) }}
+                        <div class="pair">
+                            {{ field(form.publications) }}
+                            {{ field(form.research_experience_years, step="any") }}
+                        </div>
+                        {{ field(form.work_experience_years, step="any") }}
+                    {% endif %}
+                {% endif %}
+
+                {{ field(form.nationality, required=True) }}
+            </div>
+
+            <!-- Right: test scores (FR-12) and budget (FR-15) -->
+            <div>
+                <h2 class="section-title">English and other tests</h2>
+                {% for test, short in tests %}
+                    <div class="test-row">
+                        <span class="test-name">{{ test }}</span>
+                        {{ form[short + "_status"](**{"aria-label": test + " status"}) }}
+                        {{ form[short + "_score"](placeholder="Score", step="any", **{"aria-label": test + " score"}) }}
+                    </div>
+                    {% for error in form[short + "_score"].errors %}<p class="error">{{ error }}</p>{% endfor %}
+                {% endfor %}
+                <p class="help">Enter a score only if the status is "Score available".</p>
+
+                <div class="pair">
+                    {{ field(form.other_test_name, placeholder="e.g. Duolingo") }}
+                    {{ field(form.other_test_score, step="any") }}
+                </div>
+
+                <h2 class="section-title">Budget (optional)</h2>
+                {{ field(form.yearly_budget_usd, step="any", placeholder="e.g. 5000") }}
+                <p class="help">Used only to warn you if a scholarship may cost more than you can pay.</p>
+            </div>
+        </div>
+
+        <div class="form-actions spread">
+            <a href="{{ url_for('profile.step_one') }}" class="button button-outline">← Back</a>
+            {{ form.submit(class="button") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

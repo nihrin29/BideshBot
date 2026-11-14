@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% from "profile/_macros.html" import field, progress %}
+
+{% block title %}Your profile – BideshBot{% endblock %}
+
+{% block content %}
+<div class="wide-form">
+    <div class="page-head">
+        <h1>Your academic <em>profile</em></h1>
+        <p>Two short steps. You can edit this any time.</p>
+    </div>
+    {{ progress(1) }}
+
+    <form method="post" class="panel" novalidate>
+        {{ form.hidden_tag() }}
+
+        <!-- Degree: one choice -->
+        <fieldset class="choice-group">
+            <legend>{{ form.target_degree.label.text }} <span class="req">*</span></legend>
+            <div class="choice-row">
+                {% for option in form.target_degree %}
+                    <label class="choice">{{ option() }} {{ option.label.text }}</label>
+                {% endfor %}
+            </div>
+            {% for error in form.target_degree.errors %}<p class="error">{{ error }}</p>{% endfor %}
+        </fieldset>
+
+        <!-- Countries: one or more -->
+        <fieldset class="choice-group">
+            <legend>{{ form.preferred_countries.label.text }} <span class="hint">(choose one or more)</span>
+                <span class="req">*</span></legend>
+            <div class="choice-row">
+                {% for option in form.preferred_countries %}
+                    <label class="choice">{{ option() }} {{ option.label.text }}</label>
+                {% endfor %}
+            </div>
+            {% for error in form.preferred_countries.errors %}<p class="error">{{ error }}</p>{% endfor %}
+        </fieldset>
+
+        {{ field(form.field_of_study, required=True, placeholder="e.g. Computer Science") }}
+
+        <div class="form-actions">
+            {{ form.submit(class="button") }}
+        </div>
+    </form>
+</div>
+{% endblock %}

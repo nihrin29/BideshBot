@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% set degree_label = {"Bachelor": "Bachelor's", "Master": "Master's", "PhD": "PhD"}[profile.target_degree] %}
+
+{# Shows a number without a pointless ".0", e.g. 6.0 -> 6, 3.45 -> 3.45 #}
+{% macro num(value) %}{{ "%g"|format(value) if value is not none else "–" }}{% endmacro %}
+
+{# "1 year", "2 years" #}
+{% macro years(value) %}{% if value is none %}–{% else %}{{ num(value) }} year{{ "" if value == 1 else "s" }}{% endif %}{% endmacro %}
+
+{% block title %}My profile – BideshBot{% endblock %}
+
+{% block content %}
+<div class="wide-form">
+    <div class="page-head">
+        <h1>My <em>profile</em></h1>
+        <p>This is what BideshBot uses to match you with scholarships.</p>
+    </div>
+
+    <div class="panel">
+        <div class="two-columns">
+            <div>
+                <h2 class="section-title">Your plans</h2>
+                <dl class="summary">
+                    <dt>Degree</dt><dd>{{ degree_label }}</dd>
+                    <dt>Countries</dt><dd>{{ profile.preferred_countries.replace(",", ", ") }}</dd>
+                    <dt>Field of study</dt><dd>{{ profile.field_of_study }}</dd>
+                    <dt>Nationality</dt><dd>{{ profile.nationality }}</dd>
+                </dl>
+
+                <h2 class="section-title">Academic results</h2>
+                <dl class="summary">
+                    {% if profile.target_degree == "Bachelor" %}
+                        <dt>Qualification</dt><dd>{{ profile.school_qualification }}</dd>
+                        <dt>SSC / O-Level</dt><dd>{{ num(profile.secondary_result) }} out of {{ num(profile.secondary_scale) }}</dd>
+                        <dt>HSC / A-Level</dt><dd>{{ num(profile.higher_secondary_result) }} out of {{ num(profile.higher_secondary_scale) }}</dd>
+                    {% else %}
+                        <dt>Bachelor's CGPA</dt><dd>{{ num(profile.bachelor_cgpa) }} out of {{ num(profile.bachelor_scale) }}</dd>
+                        {% if profile.target_degree == "Master" %}
+                            <dt>University</dt><dd>{{ profile.institution }}</dd>
+                            <dt>Department</dt><dd>{{ profile.bachelor_field }}</dd>
+                            <dt>Graduation year</dt><dd>{{ profile.graduation_year }}</dd>
+                        {% else %}
+                            <dt>Master's CGPA</dt><dd>{{ num(profile.master_cgpa) }} out of {{ num(profile.master_scale) }}</dd>
+                            <dt>Research area</dt><dd>{{ profile.research_area }}</dd>
+                            <dt>Publications</dt><dd>{{ num(profile.publications) }}</dd>
+                            <dt>Research experience</dt><dd>{{ years(profile.research_experience_years) }}</dd>
+                        {% endif %}
+                        <dt>Work experience</dt><dd>{{ years(profile.work_experience_years) }}</dd>
+                    {% endif %}
+                </dl>
+            </div>
+
+            <div>
+                <h2 class="section-title">Tests</h2>
+                <dl class="summary">
+                    {% for test in profile.test_scores %}
+                        <dt>{{ test.test_type }}</dt>
+                        <dd>{{ num(test.score) if test.status == "Score available" else test.status }}</dd>
+                    {% endfor %}
+                </dl>
+
+                <h2 class="section-title">Budget</h2>
+                <dl class="summary">
+                    <dt>Per year</dt>
+                    <dd>{{ ("USD " ~ "{:,.0f}".format(profile.yearly_budget_usd)) if profile.yearly_budget_usd is not none else "Not given" }}</dd>
+                </dl>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <a href="{{ url_for('profile.step_one') }}" class="button">Edit profile</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -61,6 +61,7 @@ class Profile(db.Model):
     bachelor_cgpa = db.Column(db.Float)
     bachelor_scale = db.Column(db.Float)
     institution = db.Column(db.String(150))
+    bachelor_field = db.Column(db.String(100))       # field of the Bachelor's degree (FR-10)
     graduation_year = db.Column(db.Integer)
     work_experience_years = db.Column(db.Float)
 

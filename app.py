@@ -30,7 +30,9 @@ def create_app():
 
     # Connect each group of pages (blueprint).
     from auth import auth_bp
+    from student_profile import profile_bp
     app.register_blueprint(auth_bp)
+    app.register_blueprint(profile_bp)
 
     # Create any database tables that don't exist yet.
     with app.app_context():

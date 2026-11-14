@@ -1,0 +1,19 @@
+{# Small reusable pieces for the profile forms, so each field isn't written out by hand. #}
+
+{# A label, the input box and any error messages under it. #}
+{% macro field(f, required=False) %}
+<div class="field">
+    <label for="{{ f.id }}">{{ f.label.text }}{% if required %} <span class="req">*</span>{% endif %}</label>
+    {{ f(**kwargs) }}
+    {% for error in f.errors %}<p class="error">{{ error }}</p>{% endfor %}
+</div>
+{% endmacro %}
+
+{# The two-step progress bar at the top of the form (FR-08). #}
+{% macro progress(step, degree_label="") %}
+<div class="progress" aria-label="Step {{ step }} of 2">
+    <div class="on"><div class="bar"></div><span>Step 1 · Your plans</span></div>
+    <div class="{{ 'on' if step == 2 }}"><div class="bar"></div>
+        <span>Step 2 · Academic details{% if degree_label %} ({{ degree_label }}){% endif %}</span></div>
+</div>
+{% endmacro %}

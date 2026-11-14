@@ -418,6 +418,202 @@ input:focus-visible {
     color: var(--danger);
 }
 
+/* ---------- Academic profile (Card 3) ---------- */
+.wide-form {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.page-head {
+    margin-bottom: 24px;
+}
+
+.page-head h1 {
+    margin: 0 0 6px;
+    font-size: 2.3rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+}
+
+.page-head h1 em {
+    font-family: "Instrument Serif", Georgia, serif;
+    font-weight: 400;
+    color: var(--primary);
+}
+
+.page-head p {
+    margin: 0;
+    color: var(--text-muted);
+}
+
+.panel {
+    padding: 28px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+}
+
+/* Two-step progress bar (FR-08) */
+.progress {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.progress div {
+    flex: 1;
+}
+
+.progress .bar {
+    height: 6px;
+    margin-bottom: 6px;
+    border-radius: 4px;
+    background: var(--border);
+}
+
+.progress .on .bar {
+    background: var(--primary);
+}
+
+.progress span {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--text-muted);
+}
+
+.progress .on span {
+    color: var(--primary);
+}
+
+/* Degree and country choices shown as boxes */
+.choice-group {
+    margin: 0 0 22px;
+    padding: 0;
+    border: 0;
+}
+
+.choice-group legend {
+    margin-bottom: 10px;
+    font-weight: 700;
+}
+
+.hint {
+    font-weight: 400;
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.choice-row,
+.choice-row ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.choice {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 130px;
+    padding: 14px 18px;
+    border: 1.5px solid #a3ab9c;
+    border-radius: 12px;
+    background: #ffffff;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.choice input {
+    accent-color: var(--primary);
+}
+
+/* The box turns green when its option is selected */
+.choice:has(input:checked) {
+    border-color: var(--primary);
+    background: var(--primary-light);
+}
+
+.req {
+    color: var(--danger);
+}
+
+.section-title {
+    margin: 4px 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+    font-size: 1.05rem;
+}
+
+.two-columns {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 32px;
+}
+
+/* A result next to its "out of" scale */
+.pair {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 12px;
+}
+
+.field input[type="number"],
+.field select,
+.test-row select,
+.test-row input {
+    width: 100%;
+    padding: 11px 12px;
+    border: 1px solid #a3ab9c;
+    border-radius: 8px;
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 1rem;
+}
+
+.test-row {
+    display: grid;
+    grid-template-columns: 90px 1.5fr 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--border);
+}
+
+.test-name {
+    font-weight: 700;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 26px;
+}
+
+.form-actions.spread {
+    justify-content: space-between;
+}
+
+/* Saved profile summary */
+.summary {
+    display: grid;
+    grid-template-columns: 150px 1fr;
+    gap: 8px 12px;
+    margin: 0 0 22px;
+}
+
+.summary dt {
+    color: var(--text-muted);
+}
+
+.summary dd {
+    margin: 0;
+    font-weight: 600;
+}
+
 /* ---------- Messages ---------- */
 .flash {
     max-width: 460px;
@@ -474,6 +670,10 @@ input:focus-visible {
     .steps-grid {
         grid-template-columns: 1fr;
         gap: 24px;
+    }
+
+    .two-columns {
+        grid-template-columns: 1fr;   /* tests go below the results on small screens */
     }
 }
 
