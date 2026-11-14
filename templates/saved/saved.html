@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% from "scholarships/_macros.html" import funding_badge, deadline_text, guidance_notice %}
+
+{% block title %}Saved scholarships – BideshBot{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>Saved <em>scholarships</em></h1>
+    <p>Sorted by soonest deadline. Tick two or three to compare them side by side.</p>
+</div>
+
+{% if items %}
+    <!-- The checkboxes belong to this form (form="compare-form"), so each row can also have
+         its own Remove form. Nested forms are not allowed in HTML. -->
+    <form id="compare-form" method="get" action="{{ url_for('saved.saved_list') }}"></form>
+
+    {% for item in items %}
+        {% set s = item.scholarship %}
+        <div class="saved-row">
+            <input type="checkbox" form="compare-form" name="compare" value="{{ s.id }}" id="c{{ s.id }}"
+                   {{ "checked" if s.id in chosen_ids }} aria-label="Compare {{ s.title }}">
+            <span class="country-code">{{ country_codes.get(s.country, s.country) }}</span>
+            <a href="{{ url_for('scholarships.details', scholarship_id=s.id) }}" class="saved-title">{{ s.title }}</a>
+            <span class="saved-deadline">{{ deadline_text(s.deadline, days_left(s.deadline)) }}</span>
+            <form method="post" action="{{ url_for('saved.unsave', scholarship_id=s.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <input type="hidden" name="next" value="{{ url_for('saved.saved_list') }}">
+                <button type="submit" class="link-button">Remove</button>
+            </form>
+        </div>
+    {% endfor %}
+
+    <p><button type="submit" form="compare-form" class="button">Compare selected</button></p>
+
+    {% if columns %}
+        <!-- Comparison table (FR-37) -->
+        <div class="compare-wrap">
+            <table class="compare">
+                <thead>
+                    <tr><th></th>{% for c in columns %}<th>{{ c.s.title }}</th>{% endfor %}</tr>
+                </thead>
+                <tbody>
+                    <tr><th>Country</th>{% for c in columns %}<td>{{ countries.get(c.s.country, c.s.country) }}</td>{% endfor %}</tr>
+                    <tr><th>Degree level</th>{% for c in columns %}<td>{{ c.degrees or "Not stated" }}</td>{% endfor %}</tr>
+                    <tr><th>Funding</th>{% for c in columns %}<td>{{ funding_badge(c.s.funding_type) }}</td>{% endfor %}</tr>
+                    <tr><th>Covers</th>{% for c in columns %}<td>{{ c.covers }}</td>{% endfor %}</tr>
+                    <tr><th>Indicative tuition</th>{% for c in columns %}
+                        <td>{{ (c.s.tuition_currency ~ " " ~ "{:,.0f}".format(c.s.tuition_fee) ~ " per year")
+                               if c.s.tuition_fee is not none else "Not recorded – check the official site" }}</td>{% endfor %}</tr>
+                    <tr><th>Your match</th>{% for c in columns %}
+                        <td class="strong">
+                            {% if not c.match %}<a href="{{ url_for('profile.step_one') }}">Complete your profile</a>
+                            {% elif c.match.tab %}{{ c.match.tab }}{% if c.match.missed %} ({{ c.match.missed|length }} gap{{ "" if c.match.missed|length == 1 else "s" }}){% endif %}
+                            {% else %}<span class="result-not-met">Not in your matches</span>{% endif %}
+                        </td>{% endfor %}</tr>
+                    <tr><th>Key requirements</th>{% for c in columns %}
+                        <td>
+                            {% for r in c.requirements %}
+                                <div class="small-req">{{ r.criterion }}: {{ r.required }}
+                                    <span class="result result-{{ r.result|lower|replace(' ', '-') }}">({{ r.result }})</span></div>
+                            {% else %}
+                                {{ "None recorded" if c.match else "Log in with a profile to see" }}
+                            {% endfor %}
+                        </td>{% endfor %}</tr>
+                    <tr><th>Deadline</th>{% for c in columns %}<td>{{ deadline_text(c.s.deadline, c.days) }}</td>{% endfor %}</tr>
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+{% else %}
+    <p class="panel empty">You haven't saved any scholarships yet.
+       Use the ♡ Save button on <a href="{{ url_for('scholarships.list_page') }}">the scholarship list</a>
+       or on your matches.</p>
+{% endif %}
+
+{{ guidance_notice() }}
+{% endblock %}

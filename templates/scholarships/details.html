@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "scholarships/_macros.html" import funding_badge, deadline_text, guidance_notice %}
 {% from "matching/_breakdown.html" import breakdown %}
+{% from "saved/_save_button.html" import save_button with context %}
 
 {# Indicative yearly tuition (FR-29), e.g. "EUR 1,500 per year" #}
 {% set tuition_text = (s.tuition_currency ~ " " ~ "{:,.0f}".format(s.tuition_fee) ~ " per year")
@@ -143,6 +144,7 @@
         </dl>
         <a href="{{ s.application_url }}" class="button button-full" target="_blank" rel="noopener">Apply on official site ↗</a>
         <a href="{{ s.source_url }}" class="button button-outline button-full side-second" target="_blank" rel="noopener">Official scholarship page</a>
+        <div class="side-save">{{ save_button(s.id) }}</div>
     </aside>
 </div>
 

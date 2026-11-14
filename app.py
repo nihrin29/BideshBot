@@ -33,10 +33,12 @@ def create_app():
     from student_profile import profile_bp
     from scholarships import scholarships_bp
     from matching.routes import matching_bp
+    from saved.routes import saved_bp
     app.register_blueprint(auth_bp)
     app.register_blueprint(profile_bp)
     app.register_blueprint(scholarships_bp)
     app.register_blueprint(matching_bp)
+    app.register_blueprint(saved_bp)
 
     # Create any database tables that don't exist yet.
     with app.app_context():

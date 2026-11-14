@@ -1,0 +1,16 @@
+{# Save / Saved button (FR-36). It is a small POST form, protected with a CSRF token. #}
+{% macro save_button(scholarship_id) %}
+    {% if scholarship_id in saved_ids %}
+        <form method="post" action="{{ url_for('saved.unsave', scholarship_id=scholarship_id) }}" class="save-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="next" value="{{ request.full_path }}">
+            <button type="submit" class="button button-outline save-button" title="Remove from saved">♥ Saved</button>
+        </form>
+    {% else %}
+        <form method="post" action="{{ url_for('saved.save', scholarship_id=scholarship_id) }}" class="save-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="next" value="{{ request.full_path }}">
+            <button type="submit" class="button button-outline save-button">♡ Save</button>
+        </form>
+    {% endif %}
+{% endmacro %}

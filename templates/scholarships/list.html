@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "scholarships/_macros.html" import funding_badge, deadline_text, guidance_notice %}
+{% from "saved/_save_button.html" import save_button with context %}
 
 {% block title %}Scholarships – BideshBot{% endblock %}
 
@@ -70,7 +71,10 @@
                 </div>
             </div>
         </div>
-        <a href="{{ url_for('scholarships.details', scholarship_id=s.id) }}" class="button">View details</a>
+        <div class="card-actions">
+            {{ save_button(s.id) }}
+            <a href="{{ url_for('scholarships.details', scholarship_id=s.id) }}" class="button">View details</a>
+        </div>
     </article>
 {% else %}
     <p class="panel empty">No scholarships match your search. Try fewer filters.</p>

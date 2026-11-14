@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% from "scholarships/_macros.html" import funding_badge, deadline_text, guidance_notice %}
 {% from "matching/_breakdown.html" import breakdown %}
+{% from "saved/_save_button.html" import save_button with context %}
 
 {% set degree_label = {"Bachelor": "Bachelor's", "Master": "Master's", "PhD": "PhD"}[profile.target_degree] %}
 
@@ -91,7 +92,10 @@
                     </div>
                 </div>
             </div>
-            <a href="{{ url_for('scholarships.details', scholarship_id=s.id) }}" class="button">View details</a>
+            <div class="card-actions">
+                {{ save_button(s.id) }}
+                <a href="{{ url_for('scholarships.details', scholarship_id=s.id) }}" class="button">View details</a>
+            </div>
         </div>
 
         <!-- Criterion-by-criterion breakdown (FR-18); open by default for close matches -->

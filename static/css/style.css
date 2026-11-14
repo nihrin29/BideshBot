@@ -1039,6 +1039,154 @@ input:focus-visible {
     }
 }
 
+/* ---------- Saved scholarships and comparison (Card 6) ---------- */
+.card-actions {
+    display: flex;
+    align-items: stretch;   /* Save and View details are the same height */
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.save-form {
+    display: flex;
+    margin: 0;
+}
+
+.save-button {
+    padding: 13px 18px;
+    line-height: 1.6;
+}
+
+.side-save {
+    margin-top: 10px;
+}
+
+.side-save .save-button {
+    width: 100%;
+    justify-content: center;
+}
+
+/* One saved scholarship */
+.saved-row {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 10px;
+    padding: 14px 18px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+}
+
+.saved-row input[type="checkbox"] {
+    width: 20px;
+    height: 20px;
+    accent-color: var(--primary);
+}
+
+.saved-row .country-code {
+    background: var(--primary-light);
+}
+
+.saved-title {
+    flex: 1;
+    font-weight: 700;
+    color: var(--text);
+    text-decoration: none;
+}
+
+.saved-title:hover {
+    text-decoration: underline;
+}
+
+.saved-deadline {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.saved-row form {
+    margin: 0;
+}
+
+/* A button that looks like a link (used for "Remove") */
+.link-button {
+    padding: 0;
+    border: 0;
+    background: none;
+    color: var(--danger);
+    font-family: inherit;
+    font-size: 0.9rem;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+/* Comparison table (FR-37) */
+.compare-wrap {
+    margin-top: 10px;
+    overflow-x: auto;   /* scrolls sideways on phones */
+}
+
+.compare {
+    width: 100%;
+    min-width: 640px;
+    table-layout: fixed;    /* every scholarship column gets the same width */
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    font-size: 0.92rem;
+}
+
+.compare thead th:first-child {
+    width: 170px;           /* the label column ("Country", "Funding", ...) */
+}
+
+.compare thead th {
+    padding: 14px;
+    background: var(--primary);
+    color: #ffffff;
+    text-align: left;
+}
+
+.compare tbody th {
+    width: 170px;
+    padding: 12px 14px;
+    background: var(--background);
+    text-align: left;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.compare td {
+    padding: 12px 14px;
+    vertical-align: top;
+}
+
+.compare tbody tr + tr th,
+.compare tbody tr + tr td {
+    border-top: 1px solid var(--border);
+}
+
+.strong {
+    font-weight: 700;
+}
+
+.small-req {
+    margin-bottom: 4px;
+}
+
+@media (max-width: 860px) {
+    .card-actions {
+        width: 100%;
+    }
+
+    .saved-row {
+        flex-wrap: wrap;
+    }
+}
+
 /* ---------- Tablets and phones ---------- */
 @media (max-width: 860px) {
     .hero {
