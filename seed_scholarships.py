@@ -7,6 +7,11 @@ Anything the official page did not say is left empty (shown as "Not stated" or "
 
 Run it with:  python seed_scholarships.py
 Running it again does not add duplicates (scholarships with the same title are skipped).
+
+Requirement values the matching rules can check (Card 5):
+    tests and grades -> a number ("6.5"), work experience -> years ("2"),
+    nationality / field -> a comma-separated list or "Any".
+Anything written in words is shown to the student as "Check yourself".
 """
 
 from datetime import date, datetime
@@ -59,7 +64,8 @@ SCHOLARSHIPS = [
         "application_url": "https://cscuk.fcdo.gov.uk/scholarships/commonwealth-masters-scholarships/",
         "source_url": "https://cscuk.fcdo.gov.uk/scholarships/commonwealth-masters-scholarships/",
         "requirements": [
-            ("Nationality", True, "Citizen of an eligible Commonwealth country (Bangladesh is eligible)"),
+            # Only Bangladesh was checked on the official eligible-country list so far.
+            ("Nationality", True, "Bangladesh"),
             ("Bachelor's degree", True, "Upper second-class (2:1), or 2:2 plus a relevant postgraduate qualification"),
             ("Nomination", True, "Apply through a national nominating agency, not directly"),
             ("Return home", True, "Commit to returning home after the award"),
@@ -87,7 +93,7 @@ SCHOLARSHIPS = [
         "requirements": [
             ("Bachelor's degree", True, "Usually four years, related subject, normally not older than six years"),
             ("Academic results", True, "Upper third of the class"),
-            ("Work experience", True, "At least two years after the Bachelor's degree"),
+            ("Work experience", True, "2"),   # years, after the Bachelor's degree
             ("Nationality", True, None),  # country list not checked -> Unknown
         ],
     },
@@ -105,7 +111,7 @@ SCHOLARSHIPS = [
         "application_url": "https://www.deutschlandstipendium.de/de/english-1700.html",
         "source_url": "https://www.deutschlandstipendium.de/de/english-1700.html",
         "requirements": [
-            ("Nationality", False, "All nationalities"),
+            ("Nationality", True, "Any"),     # open to all nationalities
             ("Selection", False, "Academic achievement, social commitment and personal achievements"),
         ],
     },

@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% from "scholarships/_macros.html" import funding_badge, deadline_text, guidance_notice %}
+{% from "matching/_breakdown.html" import breakdown %}
+
+{% set degree_label = {"Bachelor": "Bachelor's", "Master": "Master's", "PhD": "PhD"}[profile.target_degree] %}
+
+{% block title %}My matches – BideshBot{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>Your <em>matches</em></h1>
+    {% if not failed %}
+        <p>{{ degree_label }} · {{ profile.field_of_study }} · {{ profile.preferred_countries.replace(",", ", ") }}
+           · checked against {{ total }} published scholarship{{ "" if total == 1 else "s" }}
+           · <a href="{{ url_for('profile.step_one') }}">edit profile</a></p>
+    {% endif %}
+</div>
+
+{% if failed %}
+    {# FR-24: friendly error message #}
+    <p class="panel empty">Sorry, something went wrong while matching. Please try again in a few minutes.</p>
+{% else %}
+
+<!-- Filters (FR-16) and sorting (FR-23) -->
+<form method="get" action="{{ url_for('matching.results') }}" class="filters" onsubmit="document.getElementById('loading').hidden = false">
+    <input type="hidden" name="tab" value="{{ tab_key }}">
+
+    <label class="visually-hidden" for="country">Country</label>
+    <select id="country" name="country">
+        <option value="">My preferred countries</option>
+        <option value="all" {{ "selected" if country == "all" }}>All countries</option>
+        {% for value, name in countries %}
+            <option value="{{ value }}" {{ "selected" if value == country }}>{{ name }}</option>
+        {% endfor %}
+    </select>
+
+    <label class="visually-hidden" for="field">Field of study</label>
+    <input type="search" id="field" name="field" value="{{ field }}" placeholder="Field of study (optional)">
+
+    <label class="visually-hidden" for="funding">Funding type</label>
+    <select id="funding" name="funding">
+        <option value="">Any funding</option>
+        {% for value in funding_types %}
+            <option value="{{ value }}" {{ "selected" if value == funding }}>{{ value }}</option>
+        {% endfor %}
+    </select>
+
+    <label class="visually-hidden" for="sort">Sort</label>
+    <select id="sort" name="sort">
+        <option value="best">Sort: Best match</option>
+        <option value="deadline" {{ "selected" if sort == "deadline" }}>Sort: Soonest deadline</option>
+    </select>
+
+    <button type="submit" class="button">Update</button>
+    <!-- FR-24: shown while the page reloads with new results -->
+    <span id="loading" class="loading" hidden>Matching…</span>
+</form>
+
+<!-- The three tabs (FR-17) -->
+<nav class="tabs" aria-label="Result groups">
+    {% for key, name in tab_keys.items() %}
+        <a href="{{ url_for('matching.results', tab=key, country=country, funding=funding, field=field, sort=sort) }}"
+           class="{{ 'active' if key == tab_key }}">{{ name }} <span class="count">{{ tabs[name]|length }}</span></a>
+    {% endfor %}
+</nav>
+
+<p class="tab-help">
+    {% if tab_key == "meets" %}You meet every requirement BideshBot has recorded for these.
+    {% elif tab_key == "close" %}Close matches miss up to 2 requirements by a small margin, with at least {{ min_days }} days left to improve.
+    {% else %}Some requirements could not be checked (missing in your profile or unclear on the official page). Check them yourself.{% endif %}
+</p>
+
+{% for m in shown %}
+    {% set s = m.scholarship %}
+    <article class="sch-card match-card">
+        <div class="sch-top">
+            <div class="sch-main">
+                <h2 class="sch-title">
+                    <span class="country-code">{{ country_codes.get(s.country, s.country) }}</span>
+                    {{ s.title }}
+                </h2>
+                <p class="sch-provider">{{ s.provider }}</p>
+                <div class="sch-facts">
+                    <div>
+                        <p class="fact-label">Funding</p>
+                        {{ funding_badge(s.funding_type) }}
+                    </div>
+                    <div>
+                        <p class="fact-label">Deadline</p>
+                        <p class="fact-value">{{ deadline_text(s.deadline, days_left(s.deadline)) }}</p>
+                    </div>
+                </div>
+            </div>
+            <a href="{{ url_for('scholarships.details', scholarship_id=s.id) }}" class="button">View details</a>
+        </div>
+
+        <!-- Criterion-by-criterion breakdown (FR-18); open by default for close matches -->
+        <details class="why" {{ "open" if tab_key == "close" and loop.first }}>
+            <summary>
+                {% if tab_key == "close" %}Why didn't it match? ({{ m.missed|length }} criteri{{ "on" if m.missed|length == 1 else "a" }} missed)
+                {% elif tab_key == "verify" %}What needs checking?
+                {% else %}✓ All {{ m.rows|selectattr("result", "equalto", "Met")|list|length }} recorded criteria met{% endif %}
+            </summary>
+            {{ breakdown(m.rows) }}
+        </details>
+    </article>
+{% else %}
+    {# FR-24: no-results message with a suggestion #}
+    <p class="panel empty">No scholarships in this tab yet. Try choosing "All countries", clearing the filters,
+       or adding more countries in <a href="{{ url_for('profile.step_one') }}">your profile</a>.</p>
+{% endfor %}
+
+{% if hidden_count %}
+    {# FR-22: first five close matches, then "View more" #}
+    <p class="center">
+        <a href="{{ url_for('matching.results', tab='close', more=1, country=country, funding=funding, field=field, sort=sort) }}"
+           class="button button-outline">View {{ hidden_count }} more close match{{ "" if hidden_count == 1 else "es" }}</a>
+    </p>
+{% endif %}
+
+{% endif %}
+
+{{ guidance_notice() }}
+{% endblock %}

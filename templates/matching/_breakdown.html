@@ -1,0 +1,25 @@
+{# Criterion-by-criterion table (FR-18): requirement, required value, student's value, result. #}
+{% macro breakdown(rows) %}
+<table class="req-table">
+    <thead><tr><th>Requirement</th><th>Required</th><th>Yours</th><th>Result</th></tr></thead>
+    <tbody>
+    {% for r in rows %}
+        <tr>
+            <td>{{ r.criterion }}{% if r.is_hard %} <span class="hard-tag" title="Must be met">must</span>{% endif %}</td>
+            <td>{{ r.required }}</td>
+            <td>{{ r.yours }}</td>
+            <td class="result result-{{ r.result|lower|replace(' ', '-') }}">
+                {% if r.result == "Met" %}✓ Met
+                {% elif r.result == "Not met" %}✗ Not met{% if r.gap is not none %} (gap {{ "%g"|format(r.gap) }}){% endif %}
+                {% elif r.result == "Unknown" %}? Unknown
+                {% else %}– Not applicable{% endif %}
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{# Improvement tips for close matches (FR-20) #}
+{% for r in rows if r.suggestion %}
+    <p class="suggestion">💡 {{ r.suggestion }}</p>
+{% endfor %}
+{% endmacro %}

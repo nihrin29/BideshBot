@@ -12,6 +12,7 @@ from flask import Blueprint, abort, current_app, render_template, request
 from flask_login import current_user
 from sqlalchemy import or_
 
+from matching.rules import evaluate
 from models import Scholarship
 
 scholarships_bp = Blueprint("scholarships", __name__, url_prefix="/scholarships")
@@ -134,7 +135,14 @@ def details(scholarship_id):
     degree_text = ", ".join(degree_names.get(d.strip(), d.strip())
                             for d in (scholarship.degree_levels or "").split(",") if d.strip())
 
-    return render_template("scholarships/details.html", s=scholarship, documents=documents,
+    # A logged-in student with a finished profile sees their own values and results (FR-18),
+    # and the reason if they fail a hard criterion (FR-21).
+    match = None
+    profile = current_user.profile if current_user.is_authenticated else None
+    if profile and profile.target_degree and profile.nationality:
+        match = evaluate(profile, scholarship)
+
+    return render_template("scholarships/details.html", s=scholarship, documents=documents, match=match,
                            countries=dict(COUNTRIES), degree_names=degree_text,
                            country_codes=COUNTRY_CODES,
                            days=days_left(scholarship.deadline),

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% from "scholarships/_macros.html" import funding_badge, deadline_text, guidance_notice %}
+{% from "matching/_breakdown.html" import breakdown %}
 
 {# Indicative yearly tuition (FR-29), e.g. "EUR 1,500 per year" #}
 {% set tuition_text = (s.tuition_currency ~ " " ~ "{:,.0f}".format(s.tuition_fee) ~ " per year")
@@ -61,7 +62,15 @@
         <!-- 3. Eligibility requirements -->
         <section class="details-section">
             <h2>Eligibility requirements</h2>
-            {% if s.requirements %}
+            {% if match %}
+                {# Logged-in student: show their values and the result of each rule (FR-18) #}
+                {% if match.tab is none %}
+                    <p class="callout callout-warning"><strong>Not in your matches.</strong> {{ match.reason }}.</p>
+                {% else %}
+                    <p class="small-muted">Your result: <strong>{{ match.tab }}</strong></p>
+                {% endif %}
+                {{ breakdown(match.rows) }}
+            {% elif s.requirements %}
                 <table class="req-table">
                     <thead><tr><th>Requirement</th><th>Required</th><th>Type</th></tr></thead>
                     <tbody>
