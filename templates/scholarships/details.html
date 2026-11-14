@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+{% from "scholarships/_macros.html" import funding_badge, deadline_text, guidance_notice %}
+
+{# Indicative yearly tuition (FR-29), e.g. "EUR 1,500 per year" #}
+{% set tuition_text = (s.tuition_currency ~ " " ~ "{:,.0f}".format(s.tuition_fee) ~ " per year")
+                      if s.tuition_fee is not none else "Not recorded – check the official site" %}
+
+{% block title %}{{ s.title }} – BideshBot{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('scholarships.list_page') }}" class="back-link">← Back to scholarships</a>
+
+<div class="page-head">
+    <h1>{{ s.title }}</h1>
+    <p>{{ s.provider }} · {{ countries.get(s.country, s.country) }} · {{ degree_names or "Degree not stated" }}</p>
+</div>
+
+<!-- NFR-12: on phones the side box moves below, so this button jumps to How to Apply -->
+<a href="#how-to-apply" class="button button-full mobile-only">How to Apply ↓</a>
+
+<div class="details-layout">
+    <div class="panel details-main">
+
+        <!-- 1. Overview -->
+        <section class="details-section">
+            <h2>Overview</h2>
+            <p>{{ s.summary or "No summary recorded yet." }}</p>
+            <p class="small-muted">Eligible fields: {{ s.fields or "Not stated" }}</p>
+            {# FR-35: named scholarship or funding that depends on a department / supervisor #}
+            {% if s.is_departmental_funding %}
+                <p class="callout">
+                    <strong>Departmental or supervisor funding.</strong> This is not a named scholarship.
+                    Whether you get it depends on the department or supervisor, so contact them directly.
+                </p>
+            {% else %}
+                <p class="small-muted">Type: named scholarship</p>
+            {% endif %}
+        </section>
+
+        <!-- 2. Funding coverage (FR-28 to FR-30) -->
+        <section class="details-section">
+            <h2>Funding coverage</h2>
+            <p>{{ funding_badge(s.funding_type) }}</p>
+            <ul class="coverage">
+                <li><strong>Tuition:</strong> {{ s.tuition_coverage or "Not stated" }}</li>
+                <li><strong>Living allowance:</strong> {{ s.stipend or "Not stated" }}</li>
+                <li><strong>Other benefits:</strong> {{ s.other_benefits or "Not stated" }}</li>
+                <li class="not-covered"><strong>Not covered:</strong> {{ s.not_covered or "Not stated" }}</li>
+            </ul>
+            <p><strong>Indicative tuition fee:</strong> {{ tuition_text }}</p>
+            {% if remaining_usd is not none %}
+                <p>Approximate tuition left for you to pay: <strong>USD {{ "{:,.0f}".format(remaining_usd) }} per year</strong>
+                   <span class="small-muted">(converted with approximate exchange rates)</span></p>
+            {% endif %}
+            {% if over_budget %}
+                <p class="callout callout-warning"><strong>May exceed your budget.</strong>
+                   The tuition left to pay is higher than the yearly budget in your profile.</p>
+            {% endif %}
+        </section>
+
+        <!-- 3. Eligibility requirements -->
+        <section class="details-section">
+            <h2>Eligibility requirements</h2>
+            {% if s.requirements %}
+                <table class="req-table">
+                    <thead><tr><th>Requirement</th><th>Required</th><th>Type</th></tr></thead>
+                    <tbody>
+                    {% for r in s.requirements %}
+                        <tr>
+                            <td>{{ r.criterion }}</td>
+                            {# FR-54: unclear values are marked Unknown, never guessed #}
+                            <td>{{ "Unknown – check the official page" if r.is_unknown else r.value }}</td>
+                            <td>{{ "Must meet" if r.is_hard else "Preferred" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>No requirements recorded yet – check the official page.</p>
+            {% endif %}
+        </section>
+
+        <!-- 4. Required documents (FR-31) -->
+        <section class="details-section">
+            <h2>Required documents</h2>
+            {% if documents %}
+                <ul>{% for d in documents %}<li>{{ d }}</li>{% endfor %}</ul>
+            {% else %}
+                <p>Not recorded – check the official page.</p>
+            {% endif %}
+        </section>
+
+        <!-- 5. Deadline (FR-25, FR-33) -->
+        <section class="details-section">
+            <h2>Deadline</h2>
+            <p class="fact-value">{{ deadline_text(s.deadline, days) }}</p>
+            {% if s.deadline is none %}
+                <p class="small-muted">The official source does not give one fixed date. Check the official page.</p>
+            {% endif %}
+        </section>
+
+        <!-- 6. How to apply (FR-32) -->
+        <section class="details-section" id="how-to-apply">
+            <h2>How to apply</h2>
+            <p>Apply on the official website. BideshBot does not take applications.</p>
+            <p>
+                <a href="{{ s.application_url }}" target="_blank" rel="noopener">Open official application page ↗</a>
+                &nbsp;·&nbsp;
+                <a href="{{ s.source_url }}" target="_blank" rel="noopener">Official scholarship page ↗</a>
+            </p>
+        </section>
+
+        <!-- 7. Source information (FR-34) -->
+        <section class="details-section">
+            <h2>Source information</h2>
+            <p class="small-muted">
+                Source: <a href="{{ s.source_url }}" target="_blank" rel="noopener">{{ s.source_url }}</a><br>
+                Last collected: {{ s.last_collected.strftime("%d %b %Y") if s.last_collected else "Unknown" }}
+                · Last change detected: {{ s.last_changed.strftime("%d %b %Y") if s.last_changed else "No change detected" }}
+            </p>
+            <p class="small-muted">Collected automatically from the official source. Confirm all details on the official page before applying.</p>
+        </section>
+    </div>
+
+    <!-- Side box: key facts and the Apply button, visible in the first screen on desktop (NFR-12) -->
+    <aside class="panel details-side">
+        <dl class="side-facts">
+            <dt>Funding</dt><dd>{{ funding_badge(s.funding_type) }}</dd>
+            <dt>Country</dt><dd>{{ countries.get(s.country, s.country) }}</dd>
+            <dt>Degree</dt><dd>{{ degree_names or "Not stated" }}</dd>
+            <dt>Tuition (indicative)</dt><dd>{{ tuition_text if s.tuition_fee is not none else "Not recorded" }}</dd>
+            <dt>Deadline</dt>
+            <dd>{{ (s.deadline.day ~ " " ~ s.deadline.strftime("%b %Y")) if s.deadline else "Not confirmed" }}</dd>
+        </dl>
+        <a href="{{ s.application_url }}" class="button button-full" target="_blank" rel="noopener">Apply on official site ↗</a>
+        <a href="{{ s.source_url }}" class="button button-outline button-full side-second" target="_blank" rel="noopener">Official scholarship page</a>
+    </aside>
+</div>
+
+{{ guidance_notice() }}
+{% endblock %}

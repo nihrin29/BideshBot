@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% from "scholarships/_macros.html" import funding_badge, deadline_text, guidance_notice %}
+
+{% block title %}Scholarships – BideshBot{% endblock %}
+
+{% block content %}
+<div class="page-head">
+    <h1>Find <em>scholarships</em></h1>
+    <p>Scholarships for the United States, United Kingdom, Germany and Canada.
+       No account needed to browse.</p>
+</div>
+
+<!-- Search and filters (FR-01). method="get" puts the choices in the address bar,
+     so a search can be bookmarked or shared. -->
+<form method="get" action="{{ url_for('scholarships.list_page') }}" class="filters">
+    <label class="visually-hidden" for="q">Search</label>
+    <input type="search" id="q" name="q" value="{{ keyword }}" placeholder="Search by name, provider or subject">
+
+    <label class="visually-hidden" for="country">Country</label>
+    <select id="country" name="country">
+        <option value="">All countries</option>
+        {% for value, name in countries %}
+            <option value="{{ value }}" {{ "selected" if value == country }}>{{ name }}</option>
+        {% endfor %}
+    </select>
+
+    <label class="visually-hidden" for="degree">Degree level</label>
+    <select id="degree" name="degree">
+        <option value="">All degrees</option>
+        {% for value, name in degrees %}
+            <option value="{{ value }}" {{ "selected" if value == degree }}>{{ name }}</option>
+        {% endfor %}
+    </select>
+
+    <label class="visually-hidden" for="funding">Funding type</label>
+    <select id="funding" name="funding">
+        <option value="">Any funding</option>
+        {% for value in funding_types %}
+            <option value="{{ value }}" {{ "selected" if value == funding }}>{{ value }}</option>
+        {% endfor %}
+    </select>
+
+    <button type="submit" class="button">Search</button>
+    {% if keyword or country or degree or funding %}
+        <a href="{{ url_for('scholarships.list_page') }}" class="clear-link">Clear</a>
+    {% endif %}
+</form>
+
+<p class="result-count">{{ scholarships|length }} scholarship{{ "" if scholarships|length == 1 else "s" }} found</p>
+
+{% for s in scholarships %}
+    <!-- One scholarship card (prototype screen 06) -->
+    <article class="sch-card">
+        <div class="sch-main">
+            <h2 class="sch-title">
+                <span class="country-code">{{ country_codes.get(s.country, s.country) }}</span>
+                {{ s.title }}
+            </h2>
+            <p class="sch-provider">{{ s.provider }}</p>
+
+            <div class="sch-facts">
+                <div>
+                    <p class="fact-label">Funding</p>
+                    {{ funding_badge(s.funding_type) }}
+                    {% if budget_warning(s) %}<span class="badge badge-warning">May exceed your budget</span>{% endif %}
+                </div>
+                <div>
+                    <p class="fact-label">Deadline</p>
+                    <p class="fact-value">{{ deadline_text(s.deadline, days_left(s.deadline)) }}</p>
+                </div>
+            </div>
+        </div>
+        <a href="{{ url_for('scholarships.details', scholarship_id=s.id) }}" class="button">View details</a>
+    </article>
+{% else %}
+    <p class="panel empty">No scholarships match your search. Try fewer filters.</p>
+{% endfor %}
+
+{{ guidance_notice() }}
+{% endblock %}

@@ -655,6 +655,271 @@ input:focus-visible {
     color: var(--text);
 }
 
+/* ---------- Scholarship list and details (Card 4) ---------- */
+
+/* Hidden on screen but read by screen readers (labels for the filter boxes) */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+}
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.filters input[type="search"],
+.filters select {
+    padding: 11px 12px;
+    border: 1px solid #a3ab9c;
+    border-radius: 8px;
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.filters input[type="search"] {
+    flex: 1;
+    min-width: 220px;
+}
+
+.filters .button {
+    padding: 11px 22px;
+}
+
+.clear-link {
+    font-weight: 600;
+}
+
+.result-count {
+    margin: 0 0 14px;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+/* One scholarship card */
+.sch-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 14px;
+    padding: 22px 24px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+}
+
+.sch-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 4px;
+    font-size: 1.2rem;
+}
+
+.sch-title .country-code {
+    background: var(--primary-light);
+}
+
+.sch-provider {
+    margin: 0 0 14px;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+}
+
+.sch-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+}
+
+.fact-label {
+    margin: 0 0 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--primary);
+}
+
+.fact-value {
+    margin: 0;
+}
+
+/* Small coloured labels */
+.badge {
+    display: inline-block;
+    margin-right: 4px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.badge-full    { background: #dcefe2; color: #14532d; }
+.badge-partial { background: #fdf0c8; color: #7a5200; }
+.badge-waiver  { background: #e0e9f5; color: #1e3a5f; }
+.badge-grey    { background: #e8e8e2; color: #4b5f58; }
+.badge-soon    { background: #fde2c8; color: #8a3b00; }
+.badge-warning { background: #fde8e8; color: #8a1c1c; }
+
+.empty {
+    color: var(--text-muted);
+}
+
+/* Guidance notice (NFR-24) */
+.notice {
+    margin: 26px 0 0;
+    padding: 14px 18px;
+    background: var(--card);
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+/* Details page */
+.back-link {
+    display: inline-block;
+    margin-bottom: 14px;
+    font-size: 0.9rem;
+}
+
+.details-layout {
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 24px;
+    align-items: start;
+}
+
+.details-section {
+    padding: 18px 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.details-section:first-child {
+    padding-top: 0;
+}
+
+.details-section:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.details-section h2 {
+    margin: 0 0 8px;
+    font-size: 1.15rem;
+}
+
+.details-section p {
+    margin: 6px 0;
+}
+
+.details-section ul {
+    margin: 6px 0;
+    padding-left: 20px;
+}
+
+.not-covered {
+    color: var(--text-muted);
+}
+
+.small-muted {
+    font-size: 0.88rem;
+    color: var(--text-muted);
+}
+
+.callout {
+    padding: 10px 14px;
+    background: var(--primary-light);
+    border-radius: 8px;
+    font-size: 0.92rem;
+}
+
+.callout-warning {
+    background: #fde8e8;
+    color: #8a1c1c;
+}
+
+.req-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+}
+
+.req-table th {
+    padding: 6px 8px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+.req-table td {
+    padding: 8px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: top;
+}
+
+/* Side box with key facts; stays in view while scrolling on desktop */
+.details-side {
+    position: sticky;
+    top: 20px;
+    padding: 22px;
+}
+
+.side-facts {
+    margin: 0 0 18px;
+}
+
+.side-facts dt {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.side-facts dd {
+    margin: 0 0 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 600;
+}
+
+.side-second {
+    margin-top: 10px;
+}
+
+/* The "How to Apply" button at the top is only for phones (NFR-12) */
+.mobile-only {
+    display: none;
+}
+
+@media (max-width: 860px) {
+    .details-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .details-side {
+        position: static;
+    }
+
+    .mobile-only {
+        display: flex;
+        margin-bottom: 16px;
+    }
+
+    .sch-card {
+        flex-direction: column;
+    }
+}
+
 /* ---------- Tablets and phones ---------- */
 @media (max-width: 860px) {
     .hero {

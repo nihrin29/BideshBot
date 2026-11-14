@@ -29,3 +29,7 @@ class Config:
 
     # NFR-07: session cookies cannot be read by JavaScript.
     SESSION_COOKIE_HTTPONLY = True
+
+    # FR-30: approximate exchange rates used to turn tuition fees into US dollars.
+    # How many US dollars one unit of each currency is worth. Update these by hand now and then.
+    EXCHANGE_RATES_TO_USD = {"USD": 1.0, "GBP": 1.30, "EUR": 1.15, "CAD": 0.72}
