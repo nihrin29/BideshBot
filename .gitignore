@@ -39,3 +39,6 @@ transcribe_gemini.py
 .idea/
 Thumbs.db
 desktop.ini
+
+# Course documents (diagrams, reports) - kept locally, not part of the website code
+docs/
